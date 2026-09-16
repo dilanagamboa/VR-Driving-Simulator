@@ -28,6 +28,7 @@ public class GameFlowManager : MonoBehaviour
     [Header("Referencias de Escenarios")]
     public ParkingDetector parkingDetector;
     public IntersectionDetector intersectionDetector;
+    public WeatherStageDetector weatherStageDetector;
 
     [Header("UI Feedback")]
     public GameObject evaluationPanel;
@@ -74,12 +75,11 @@ public class GameFlowManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        // Frenar completamente el vehículo
         if (vehicleRb != null)
         {
             vehicleRb.linearVelocity = Vector3.zero;
             vehicleRb.angularVelocity = Vector3.zero;
-            vehicleRb.isKinematic = true; // Congelar físicas mientras la UI esté en pantalla
+            vehicleRb.isKinematic = true;
         }
 
         Cursor.lockState = CursorLockMode.None;
@@ -130,20 +130,41 @@ public class GameFlowManager : MonoBehaviour
 
         if (lastTestSuccess)
         {
-            // Solo avanzamos si fue éxito
             if (currentStage == TestStage.Parking)
                 currentStage = TestStage.Intersection;
             else if (currentStage == TestStage.Intersection)
                 currentStage = TestStage.AdverseWeather;
+            else if (currentStage == TestStage.AdverseWeather)
+            {
+                // Concluyó todo el simulador
+                Debug.Log("¡Todas las pruebas completadas!");
+                return;
+            }
         }
 
-        // Ejecutar teletransporte seguro en corrutina
         StartCoroutine(ExecuteStageReset());
     }
 
     private IEnumerator ExecuteStageReset()
     {
         Transform targetSpawn = null;
+
+        // Manejar condiciones ambientales según fase
+        if (currentStage == TestStage.AdverseWeather)
+        {
+            if (weatherStageDetector != null)
+            {
+                weatherStageDetector.EnableWeatherConditions();
+                weatherStageDetector.ResetState();
+            }
+        }
+        else
+        {
+            if (weatherStageDetector != null)
+            {
+                weatherStageDetector.DisableWeatherConditions();
+            }
+        }
 
         switch (currentStage)
         {
@@ -162,7 +183,6 @@ public class GameFlowManager : MonoBehaviour
 
         if (targetSpawn != null && vehicle != null)
         {
-            // 1. Apagar temporalmente los WheelColliders para que no peleen con el suelo
             WheelCollider[] wheels = vehicle.GetComponentsInChildren<WheelCollider>();
             foreach (var w in wheels)
             {
@@ -178,7 +198,6 @@ public class GameFlowManager : MonoBehaviour
                 vehicleRb.angularVelocity = Vector3.zero;
             }
 
-            // 2. Colocar vehículo elevándolo 15-20 cm sobre el suelo para asentar suspensión
             Vector3 spawnPos = targetSpawn.position + Vector3.up * 0.2f;
             vehicle.transform.position = spawnPos;
             vehicle.transform.rotation = targetSpawn.rotation;
@@ -191,10 +210,8 @@ public class GameFlowManager : MonoBehaviour
 
             Physics.SyncTransforms();
 
-            // 3. Esperar un ciclo de físicas para que el mundo registre la nueva posición
             yield return new WaitForFixedUpdate();
 
-            // 4. Reactivar WheelColliders y físicas limpias
             foreach (var w in wheels)
             {
                 w.enabled = true;
@@ -212,7 +229,6 @@ public class GameFlowManager : MonoBehaviour
             Physics.SyncTransforms();
         }
 
-        // Esperar un frame antes de volver a permitir detección de eventos
         yield return new WaitForSeconds(0.2f);
         isTransitioning = false;
     }
