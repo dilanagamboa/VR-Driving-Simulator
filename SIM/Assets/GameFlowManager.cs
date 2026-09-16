@@ -61,7 +61,11 @@ public class GameFlowManager : MonoBehaviour
     {
         if (isTransitioning) return;
         lastTestSuccess = true;
-        ShowEvaluationUI(successMessage, "Siguiente Prueba", Color.green);
+
+        // Si estamos en la última prueba, el botón dice "Terminar", de lo contrario "Siguiente Prueba"
+        string buttonText = (currentStage == TestStage.AdverseWeather) ? "Terminar" : "Siguiente Prueba";
+
+        ShowEvaluationUI(successMessage, buttonText, Color.forestGreen);
     }
 
     public void OnTestFailed(string failureMessage)
@@ -131,13 +135,19 @@ public class GameFlowManager : MonoBehaviour
         if (lastTestSuccess)
         {
             if (currentStage == TestStage.Parking)
+            {
                 currentStage = TestStage.Intersection;
+            }
             else if (currentStage == TestStage.Intersection)
+            {
                 currentStage = TestStage.AdverseWeather;
+            }
             else if (currentStage == TestStage.AdverseWeather)
             {
-                // Concluyó todo el simulador
-                Debug.Log("¡Todas las pruebas completadas!");
+                // Acción al terminar todo el simulador (reiniciar escena o menú principal)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(
+                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+                );
                 return;
             }
         }
