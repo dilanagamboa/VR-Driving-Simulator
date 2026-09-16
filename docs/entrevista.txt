@@ -1,0 +1,52 @@
+Para saber que escenarios en VR montar (lo mas básicos posibles)
+
+1 ¿Cuáles son los errores más peligrosos que hacen los estudiantes cuando llegan a una intersección?
+
+*R/ - Sacan mucho el parachoques de carro para poder visualizar los carros en lugar de despegar el cuerpo del respaldar de carro ( mi recomendación es asomar más el cuerpo y sacar menos carro)*
+
+- *Al visualizar de donde vienen los carros , si la linea es amarilla , los sentidos de los carros en en sentido contrario por lo tanto deben salir viendo primero a la izquierda y en ocasiones lo hacen al revés.*
+
+- *La velocidad de salida en ocasiones es demasiado lenta o por el contrario salen con mucha presión en el acelerador*
+
+2  A la hora de parquear, qué es lo que más les cuesta o les da miedo (reversa, paralelo, medir el carro)?
+
+R/ - *Se les dificulta más el lineal osea en espacios vacíos a la orilla de la acera. Para ello hay técnicas pero sobre todo deben dominar muy bien el uso de los espejos y tener además control del tamaño del vehículo.*
+
+3 ¿Cómo manejan el pánico de los estudiantes antes de subirse al carro?
+
+*R/ Primero se trabaja la parte sicológica y control de emociones. Se rompe el hielo con una conversa previa amable y segura, y se les explica que primero van a conocer a fondo y familiarizarse con el vehículo antes de iniciar la práctica.*
+*Ese trabajo pedagógico es muy importante porque se les genera tranquilidad.*
+
+ Para el negocio 
+
+4 Cuando llueve muy fuerte o hay neblina, ¿tienen que cancelar clases o asumen el riesgo?
+
+*R/ Dependerá de la intensidad de la lluvia y del nivel de avance del estudiante. ( Ahí es precisamente en donde sería de mucha utilidad un simulador para continuar con una clase virtual adquiriendo siempre habilidades y destrezas, además de buena lectura e interpretación de señales de tránsito*
+
+5 Si se logra que los alumnos dominen lo básico (volante y pedales) en el simulador primero, siente que les ahorraría costos (menos desgaste del carro, frenadas bruscas, etc.)?
+
+*R/ Claro que sí. Además de ir adquiriendo confianza. Por otro lado se trabajaría aspectos de seguridad y la postura adecuada, elementos del vehículo como luces y tablero. El tema de familiarización con el vehículo sería excelente también*
+
+
+6 ¿Creen que tener este simulador en la escuela les daría ventaja para atraer más clientes?
+
+*R/ Sin duda alguna sería un plus para la Escuela. En años anteriores me ofrecieron esa opción y me incumplieron con el proyecto. Pero siempre ha sido una opción para implementar en la Escuela.*
+
+ Implementación 
+
+7-  De los 3 escenarios que vamos a hacer (parqueo, intersecciones, lluvia), ¿cuál sienten que les urge más?
+
+*R/ La lluvia afecta, bastante cuando se imparten lecciones en las tardes en tiempo de invierno, pero ahora el tema de parqueo es sumamente importante porque incluso ahora es una parte que evalúan en las pruebas prácticas de Cosevi ( El parqueo es algo que los estudiantes deben dominar al 100%*
+
+
+- Comentarios extras y cosas que le gustarian
+
+*R/ *Desconozco el prototipo de simulador en proyecto, pero es importante que tenga la opción de transmisión automática y de manual.*
+*Por otro lado implementar las rutas reales actuales en los diferentes planteles de Cosevi.,Así no solo se trabaja los aspectos técnicos y de maniobrabilidad, sino que se va adelantando el conocimiento de las posibilidades rutas evaluables.*Eso lleva tiempo explicarlo. *Además simular la fase 1 y 2 de las pruebas. Es decir revisión del vehículo pero sobre todo el Plantel (ejemplo zig zag, reversa  rotonda y parqueo)*
+
+
+Quedo a su entera disposición y ojalá puedan hacerme partícipe del proyecto en mención.
+
+Saludos 
+Ericka Quesada 
+Escuela de Manejo CR
