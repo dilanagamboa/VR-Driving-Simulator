@@ -28,7 +28,6 @@ public class ParkingDetector : MonoBehaviour
             vehicleRb = rb;
             stoppedTimer = 0f;
 
-            // Asegurar que el vehículo tenga el detector de colisiones con conos
             VehicleCollisionDetector colDetector = rb.GetComponent<VehicleCollisionDetector>();
             if (colDetector == null)
             {
@@ -55,7 +54,6 @@ public class ParkingDetector : MonoBehaviour
             parkingCompleted = false;
             parkingFailed = false;
 
-            // Volver a encender el letrero si el vehículo se retira del cajón
             if (parkingSign != null)
             {
                 parkingSign.SetActive(true);
@@ -65,11 +63,14 @@ public class ParkingDetector : MonoBehaviour
 
     private void RegisterFailure(string reason)
     {
-        if (!parkingCompleted)
+        if (!parkingCompleted && !parkingFailed)
         {
             parkingFailed = true;
             failureReason = reason;
-            Debug.LogWarning("Maniobra reprobada: " + reason);
+            if (GameFlowManager.Instance != null)
+            {
+                GameFlowManager.Instance.OnTestFailed("¡Has chocado un cono! Maniobra fallida.");
+            }
         }
     }
 
@@ -87,19 +88,33 @@ public class ParkingDetector : MonoBehaviour
             if (stoppedTimer >= requiredStopTime)
             {
                 parkingCompleted = true;
-                Debug.Log("¡ESTACIONAMIENTO EXITOSO!");
+                if (parkingSign != null) parkingSign.SetActive(false);
 
-                // Desactivar el letrero flotante al completar la maniobra
-                if (parkingSign != null)
+                if (GameFlowManager.Instance != null)
                 {
-                    parkingSign.SetActive(false);
+                    GameFlowManager.Instance.OnTestCompleted("¡Estacionamiento Correcto!");
                 }
             }
         }
         else
         {
-            // Si el carro se sigue moviendo dentro del cajón, reiniciar temporizador
             stoppedTimer = 0f;
+        }
+    }
+
+    // MÉTODO NUEVO: Se llama al reiniciar la prueba
+    public void ResetState()
+    {
+        vehicleInside = false;
+        vehicleRb = null;
+        stoppedTimer = 0f;
+        parkingCompleted = false;
+        parkingFailed = false;
+        failureReason = "";
+
+        if (parkingSign != null)
+        {
+            parkingSign.SetActive(true);
         }
     }
 
