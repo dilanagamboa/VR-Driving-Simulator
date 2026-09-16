@@ -27,6 +27,7 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Referencias de Escenarios")]
     public ParkingDetector parkingDetector;
+    public IntersectionDetector intersectionDetector;
 
     [Header("UI Feedback")]
     public GameObject evaluationPanel;
@@ -152,6 +153,7 @@ public class GameFlowManager : MonoBehaviour
                 break;
             case TestStage.Intersection:
                 targetSpawn = spawnIntersection;
+                if (intersectionDetector != null) intersectionDetector.ResetState();
                 break;
             case TestStage.AdverseWeather:
                 targetSpawn = spawnWeather;

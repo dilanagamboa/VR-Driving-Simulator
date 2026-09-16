@@ -39,6 +39,9 @@ public class ParkingDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        // Si ya completamos la prueba con éxito, ignorar salidas para no reiniciar las variables
+        if (parkingCompleted) return;
+
         Rigidbody rb = other.GetComponentInParent<Rigidbody>();
         if (rb != null && rb == vehicleRb)
         {
@@ -76,6 +79,11 @@ public class ParkingDetector : MonoBehaviour
 
     private void Update()
     {
+        // Solo evaluar si estamos en la fase de parqueo
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.currentStage != GameFlowManager.TestStage.Parking)
+            return;
+
+        // Si ya completó o falló, frenar cualquier cálculo
         if (!vehicleInside || vehicleRb == null || parkingCompleted || parkingFailed)
             return;
 
@@ -87,8 +95,11 @@ public class ParkingDetector : MonoBehaviour
 
             if (stoppedTimer >= requiredStopTime)
             {
+                stoppedTimer = requiredStopTime; // Clavar en el tiempo máximo exacto
                 parkingCompleted = true;
-                if (parkingSign != null) parkingSign.SetActive(false);
+
+                if (parkingSign != null)
+                    parkingSign.SetActive(false);
 
                 if (GameFlowManager.Instance != null)
                 {
@@ -102,7 +113,6 @@ public class ParkingDetector : MonoBehaviour
         }
     }
 
-    // MÉTODO NUEVO: Se llama al reiniciar la prueba
     public void ResetState()
     {
         vehicleInside = false;
@@ -120,28 +130,62 @@ public class ParkingDetector : MonoBehaviour
 
     private void OnGUI()
     {
+        // Solo mostrar cuando estemos jugando la Prueba 1
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.currentStage != GameFlowManager.TestStage.Parking)
+            return;
+
         GUIStyle style = new GUIStyle();
-        style.alignment = TextAnchor.MiddleCenter;
+        style.fontSize = 17;
         style.fontStyle = FontStyle.Bold;
 
-        if (parkingFailed)
+        // Misma caja de checklist que la Prueba 2 (mismo tamaño, posición y estilo)
+        GUI.Box(new Rect(20, 20, 320, 165), "Prueba 1: Maniobra de Estacionamiento");
+
+        // 1. Estado de posición dentro del cajón
+        if (vehicleInside)
         {
-            style.fontSize = 26;
-            style.normal.textColor = Color.red;
-            GUI.Label(new Rect(Screen.width / 2 - 250, 60, 500, 50), "✗ PARQUEO ERRÓNEO: ¡Golpeaste un cono!", style);
-        }
-        else if (parkingCompleted)
-        {
-            style.fontSize = 26;
             style.normal.textColor = Color.green;
-            GUI.Label(new Rect(Screen.width / 2 - 200, 60, 400, 50), "✓ ¡ESTACIONAMIENTO EXITOSO!", style);
+            GUI.Label(new Rect(30, 50, 300, 25), "✓ Posición: Dentro del cajón", style);
+        }
+        else
+        {
+            style.normal.textColor = Color.yellow;
+            GUI.Label(new Rect(30, 50, 300, 25), "○ Posición: Entra al cajón de conos", style);
+        }
+
+        // 2. Progreso de frenado total
+        if (parkingCompleted)
+        {
+            style.normal.textColor = Color.green;
+            GUI.Label(new Rect(30, 80, 300, 25), "✓ Detención completa: 100%", style);
         }
         else if (vehicleInside)
         {
-            style.fontSize = 20;
             style.normal.textColor = Color.yellow;
             float progreso = Mathf.Clamp01(stoppedTimer / requiredStopTime) * 100f;
-            GUI.Label(new Rect(Screen.width / 2 - 200, 60, 400, 50), $"Frenando en cajón: {progreso:F0}%", style);
+            GUI.Label(new Rect(30, 80, 300, 25), $"Detención obligatoria: {progreso:F0}%", style);
         }
+        else
+        {
+            style.normal.textColor = Color.white;
+            GUI.Label(new Rect(30, 80, 300, 25), "○ Detención obligatoria: 0%", style);
+        }
+
+        // 3. Estado de colisión con conos
+        if (parkingFailed)
+        {
+            style.normal.textColor = Color.red;
+            GUI.Label(new Rect(30, 110, 300, 25), "✗ Conos: ¡COLISIÓN DETECTADA!", style);
+        }
+        else
+        {
+            style.normal.textColor = Color.green;
+            GUI.Label(new Rect(30, 110, 300, 25), "✓ Conos intactos: Sin toques", style);
+        }
+
+        // 4. Instrucción guía
+        style.normal.textColor = Color.white;
+        string guia = parkingCompleted ? "¡Maniobra aprobada!" : "Mantén el vehículo quieto 2s";
+        GUI.Label(new Rect(30, 140, 300, 25), $"► {guia}", style);
     }
 }
